@@ -95,7 +95,7 @@ export default function App() {
         Set Data
       </button>
 
-      <div></div>
+      <div>Set data div</div>
     </div>
   );
 }
