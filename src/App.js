@@ -2,19 +2,50 @@ import React from 'react';
 import './style.css';
 import React, { useReducer } from 'react';
 
-const reducer = (state, action) => {
-  if (action.type === 'setImage') {
-    return { ...state, image: action.data };
-  } else if (action.type === 'setName') {
-    return { ...state, name: action.data };
-  } else if (action.type === 'setCity') {
-    return { ...state, city: action.data };
-  } else if (action.type === 'setPosition') {
-    return { ...state, position: action.data };
-  } else if (action.type === 'setArray') {
-    return { ...state, dataArray: [...state.dataArray, action.data] };
-  } else {
-    return state;
+// const reducer = (state, action) => {
+//   if (action.type === 'setImage') {
+//     return { ...state, image: action.data };
+//   } else if (action.type === 'setName') {
+//     return { ...state, name: action.data };
+//   } else if (action.type === 'setCity') {
+//     return { ...state, city: action.data };
+//   } else if (action.type === 'setPosition') {
+//     return { ...state, position: action.data };
+//   } else if (action.type === 'setArray') {
+//     return { ...state, dataArray: [...state.dataArray, action.data] };
+//   } else {
+//     return state;
+//   }
+// };
+
+const reducerActionType = {
+  //object
+  setImage: 'setImage',
+  setName: 'setName',
+  setCity: 'setCity',
+  setPosition: 'setPosition',
+  setArray: 'setArray',
+};
+
+const reducer = (state, { type, data }) => {
+  switch (type) {
+    case reducerActionType.setImage:
+      return { ...state, image: data };
+
+    case reducerActionType.setName:
+      return { ...state, name: data };
+
+    case reducerActionType.setCity:
+      return { ...state, city: data };
+
+    case reducerActionType.setPosition:
+      return { ...state, position: data };
+
+    case reducerActionType.setArray:
+      return { ...state, dataArray: [...state.dataArray, data] };
+
+    default:
+      return state;
   }
 };
 
