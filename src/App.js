@@ -1,132 +1,51 @@
 import React from 'react';
 import './style.css';
-import React, { useReducer } from 'react';
-
-// const reducer = (state, action) => {
-//   if (action.type === 'setImage') {
-//     return { ...state, image: action.data };
-//   } else if (action.type === 'setName') {
-//     return { ...state, name: action.data };
-//   } else if (action.type === 'setCity') {
-//     return { ...state, city: action.data };
-//   } else if (action.type === 'setPosition') {
-//     return { ...state, position: action.data };
-//   } else if (action.type === 'setArray') {
-//     return { ...state, dataArray: [...state.dataArray, action.data] };
-//   } else {
-//     return state;
-//   }
-// };
-
-const reducerActionType = {
-  //object
-  setImage: 'setImage',
-  setName: 'setName',
-  setCity: 'setCity',
-  setPosition: 'setPosition',
-  setArray: 'setArray',
-};
-
-const reducer = (state, { type, data }) => {
-  switch (type) {
-    case reducerActionType.setImage:
-      return { ...state, image: data };
-
-    case reducerActionType.setName:
-      return { ...state, name: data };
-
-    case reducerActionType.setCity:
-      return { ...state, city: data };
-
-    case reducerActionType.setPosition:
-      return { ...state, position: data };
-
-    case reducerActionType.setArray:
-      return { ...state, dataArray: [...state.dataArray, data] };
-
-    default:
-      return state;
-  }
-};
+import React, { useRef, useState } from 'react';
 
 export default function App() {
-  const [state, setState] = useReducer(reducer, {
-    name: '',
+  const [myData, setMyData] = useState({
     image: '',
+    name: '',
     city: '',
     position: '',
-    dataArray: [],
-  }); //react hook(can use differant name for reducer/reducer = function name)
+  });
 
-  console.log(state);
+  const imageUrlRef = useRef(); //this hook did not rerender
+  const nameRef = useRef();
+  const cityRef = useRef();
+  const positionRef = useRef();
+
+  const setDataHandle = () => {
+    setMyData({
+      image: imageUrlRef.current.value,
+      name: nameRef.current.value,
+      city: cityRef.current.value,
+      position: positionRef.current.value,
+    });
+
+    imageUrlRef.current.focus(); // after click curser send to image text box
+  };
+
+  console.log('rerender');
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Enter image Url"
-        value={state.image}
-        onChange={(e) =>
-          setState({
-            type: 'setImage',
-            data: e.target.value,
-          })
-        }
-      />
+      <input type="text" placeholder="Enter image Url" ref={imageUrlRef} />
 
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={state.name}
-        onChange={(e) =>
-          setState({
-            type: 'setName',
-            data: e.target.value,
-          })
-        }
-      />
+      <input type="text" placeholder="Enter your name" ref={nameRef} />
 
-      <input
-        type="text"
-        placeholder="Enter your city"
-        value={state.city}
-        onChange={(e) =>
-          setState({
-            type: 'setCity',
-            data: e.target.value,
-          })
-        }
-      />
+      <input type="text" placeholder="Enter your city" ref={cityRef} />
 
-      <input
-        type="text"
-        placeholder="Enter your position"
-        value={state.position}
-        onChange={(e) =>
-          setState({
-            type: 'setPosition',
-            data: e.target.value,
-          })
-        }
-      />
+      <input type="text" placeholder="Enter your position" ref={positionRef} />
 
-      <button
-        onClick={(e) =>
-          setState({
-            type: 'setArray',
-            data: {
-              image: state.image,
-              name: state.name,
-              city: state.city,
-              position: state.position,
-            },
-          })
-        }
-      >
-        Set Data
-      </button>
+      <button onClick={setDataHandle}>Set Data</button>
 
-      <div>Data div</div>
+      <p>{myData?.name}</p>
+      <p>{myData?.image}</p>
+      <p>{myData?.city}</p>
+      <p>{myData?.position}</p>
+
+      <div></div>
     </div>
   );
 }
