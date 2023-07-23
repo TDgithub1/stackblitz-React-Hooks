@@ -1,59 +1,24 @@
 import React from 'react';
 import './style.css';
-import React, { useCallback, useEffect, useState } from 'react';
-//useCallback hook can indentify function differance/return function
-//useMemo return value
+import { createContext, useState } from 'react';
+import Com_f from './Components/Com_f';
 
-//both use for app optimize
+//use for user data,such as password,email
+
+export const userAuth = createContext({});
 
 export default function App() {
-  const [imageUrl, setImageUrl] = useState('');
-  const [name, setName] = useState('');
-  const [result, setResult] = useState('');
-
-  const myFunction = useCallback(
-    () => () => {
-      return 'amila';
-    },
-    []
-  );
-
-  console.log('rerender');
-  console.log(result);
-
-  useEffect(() => {
-    console.log('useEffect');
-    console.log(myFunction());
-    setResult(myFunction());
-  }, [myFunction]);
+  const [username, setUsername] = useState('');
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Enter image Url"
-        value={imageUrl}
-        onChange={(e) => setImageUrl(e.target.value)}
-      />
-
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-
-      <input type="text" placeholder="Enter your city" />
-
-      <input type="text" placeholder="Enter your position" />
-
-      <button>Set Data</button>
-
-      <p>{imageUrl}</p>
-      <p>{name}</p>
-      <p></p>
-
-      <div></div>
-    </div>
+    <userAuth.Provider
+      value={{
+        username,
+        setUsername,
+      }}
+    >
+      <h1>App {username}</h1>
+      <Com_f />
+    </userAuth.Provider>
   );
 }
