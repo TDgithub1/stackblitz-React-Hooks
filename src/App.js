@@ -1,14 +1,18 @@
 import React from 'react';
-// import { createContext, useState } from 'react';
 
-// export const userAuth = createContext({});
+import UserAuth from './Context/UserAuth';
+import Login from './Components/Login';
+
+import UserActivity from './Context/UserActivity';
+import UserInput from './Components/UserInput';
 
 export default function App() {
-  // const [username, setUsername] = useState('');
-
   return (
-    <div>
-      <h1>App</h1>
-    </div>
+    <UserAuth>
+      <UserActivity>
+        <Login />
+        <UserInput />
+      </UserActivity>
+    </UserAuth>
   );
 }
