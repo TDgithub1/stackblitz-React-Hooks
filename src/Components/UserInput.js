@@ -6,7 +6,7 @@ import { userData } from '../Context/UserAuth';
 
 //import { submitUserActivity } from '../Utils/authValidate';
 
-import { Action } from '../Utils/authValidate';
+import { Action } from '../Reducers/userActivityReducer';
 
 const UserInput = () => {
   const {
