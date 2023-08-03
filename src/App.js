@@ -1,101 +1,36 @@
 import React from 'react';
 import './style.css';
-import React, { useReducer } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 
-const reducer = (state, action) => {
-  if (action.type === 'setImage') {
-    return { ...state, image: action.data };
-  } else if (action.type === 'setName') {
-    return { ...state, name: action.data };
-  } else if (action.type === 'setCity') {
-    return { ...state, city: action.data };
-  } else if (action.type === 'setPosition') {
-    return { ...state, position: action.data };
-  } else if (action.type === 'setArray') {
-    return { ...state, dataArray: [...state.dataArray, action.data] };
-  } else {
-    return state;
-  }
-};
+const url = 'https://jsonplaceholder.typicode.com/';
 
 export default function App() {
-  const [state, setState] = useReducer(reducer, {
-    name: '',
-    image: '',
-    city: '',
-    position: '',
-    dataArray: [],
-  }); //react hook(can use differant name for reducer/reducer = function name)
+  const [data, setData] = useState({});
+  const [isClick, setIsClick] = useState(1);
 
-  console.log(state);
+  useLayoutEffect(() => {
+    console.log('useEffect runing...');
+
+    setTimeout(() => {
+      fetch(`${url + 'posts'}/${isClick}`)
+        .then((res) => res.json())
+        .then((data) => setData(data));
+    }, 1000);
+  }, [isClick]);
+
+  console.log(data); //useState data
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Enter image Url"
-        value={state.image}
-        onChange={(e) =>
-          setState({
-            type: 'setImage',
-            data: e.target.value,
-          })
-        }
-      />
+      <h1>How many times button click is: {isClick}</h1>
 
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={state.name}
-        onChange={(e) =>
-          setState({
-            type: 'setName',
-            data: e.target.value,
-          })
-        }
-      />
+      <h3>{data?.title}</h3>
 
-      <input
-        type="text"
-        placeholder="Enter your city"
-        value={state.city}
-        onChange={(e) =>
-          setState({
-            type: 'setCity',
-            data: e.target.value,
-          })
-        }
-      />
-
-      <input
-        type="text"
-        placeholder="Enter your position"
-        value={state.position}
-        onChange={(e) =>
-          setState({
-            type: 'setPosition',
-            data: e.target.value,
-          })
-        }
-      />
-
-      <button
-        onClick={(e) =>
-          setState({
-            type: 'setArray',
-            data: {
-              image: state.image,
-              name: state.name,
-              city: state.city,
-              position: state.position,
-            },
-          })
-        }
-      >
-        Set Data
-      </button>
-
-      <div>Set data div</div>
+      <button onClick={() => setIsClick((pre) => pre + 1)}>Get Data</button>
     </div>
   );
 }
+
+// the useLayoutEffect actually runs before the useEffect runs. This is because useLayoutEffect is fired synchronously after DOM is mutated and before the browser paints the new changes.
+
+// The useLayoutEffect hook is similar to the useEffect theme in that it fires synchronously once all DOM loading is completed, rather than asynchronous like the useEffect hook. This can be used to re-render the DOM and read its layout concurrently.
