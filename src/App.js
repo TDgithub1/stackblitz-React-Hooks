@@ -1,8 +1,10 @@
+import './App.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
   const [data, setData] = useState([]);
+  const [reFetch, setReFetch] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController(); // best way to stop data
@@ -26,10 +28,12 @@ function App() {
       console.log('useEffect cleanup....');
       controller.abort();
     };
-  }, []);
+  }, [reFetch]);
 
   return (
     <div>
+      <button onClick={() => setReFetch((pre) => pre + 1)}>ReFetch</button>
+
       {data?.map((ele, index) => (
         <h3 key={index}>{ele.title}</h3>
       ))}
