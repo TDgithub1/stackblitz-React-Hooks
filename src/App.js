@@ -1,101 +1,54 @@
-import React from 'react';
-import './style.css';
-import React, { useReducer } from 'react';
+import './App.css';
+import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import PopUp from './Components/PopUp';
 
-const reducer = (state, action) => {
-  if (action.type === 'setImage') {
-    return { ...state, image: action.data };
-  } else if (action.type === 'setName') {
-    return { ...state, name: action.data };
-  } else if (action.type === 'setCity') {
-    return { ...state, city: action.data };
-  } else if (action.type === 'setPosition') {
-    return { ...state, position: action.data };
-  } else if (action.type === 'setArray') {
-    return { ...state, dataArray: [...state.dataArray, action.data] };
-  } else {
-    return state;
-  }
-};
+function App() {
+  const [data, setData] = useState([]);
+  const [reFetch, setReFetch] = useState(0);
 
-export default function App() {
-  const [state, setState] = useReducer(reducer, {
-    name: '',
-    image: '',
-    city: '',
-    position: '',
-    dataArray: [],
-  }); //react hook(can use differant name for reducer/reducer = function name)
+  const popUp = useRef();
 
-  console.log(state);
+  useEffect(() => {
+    const controller = new AbortController(); // best way to stop data
+
+    console.log('useEffect runing...', controller.signal);
+
+    axios
+      .get('https://jsonplaceholder.typicode.com/posts', {
+        signal: controller.signal,
+      })
+      .then((result) => {
+        console.log(result.data);
+        console.log('get data');
+
+        popUp.current.showPopUp(); // from popup.js
+
+        setData(result.data);
+
+        setTimeout(() => popUp.current.hidePopUp(), 4000);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+
+    return () => {
+      console.log('useEffect cleanup....');
+      controller.abort();
+    };
+  }, [reFetch]);
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Enter image Url"
-        value={state.image}
-        onChange={(e) =>
-          setState({
-            type: 'setImage',
-            data: e.target.value,
-          })
-        }
-      />
+      <PopUp ref={popUp} />
 
-      <input
-        type="text"
-        placeholder="Enter your name"
-        value={state.name}
-        onChange={(e) =>
-          setState({
-            type: 'setName',
-            data: e.target.value,
-          })
-        }
-      />
+      <button onClick={() => setReFetch((pre) => pre + 1)}>ReFetch</button>
 
-      <input
-        type="text"
-        placeholder="Enter your city"
-        value={state.city}
-        onChange={(e) =>
-          setState({
-            type: 'setCity',
-            data: e.target.value,
-          })
-        }
-      />
-
-      <input
-        type="text"
-        placeholder="Enter your position"
-        value={state.position}
-        onChange={(e) =>
-          setState({
-            type: 'setPosition',
-            data: e.target.value,
-          })
-        }
-      />
-
-      <button
-        onClick={(e) =>
-          setState({
-            type: 'setArray',
-            data: {
-              image: state.image,
-              name: state.name,
-              city: state.city,
-              position: state.position,
-            },
-          })
-        }
-      >
-        Set Data
-      </button>
-
-      <div>Set data div</div>
+      {data?.map((ele, index) => (
+        <h3 key={index}>{ele.title}</h3>
+      ))}
     </div>
   );
 }
+
+export default App;
